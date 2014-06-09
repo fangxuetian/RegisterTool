@@ -1,0 +1,22 @@
+说明：
+1.SoftRegApp 是授权提示
+2.WinServiceKey 授权服务和服务安装项目
+  WinTest 安装项目
+  WindowsServiceTest 授权服务
+
+需要修改的地方
+1）SoftRegApp\SoftRegApp\SoftReg.cs
+  GetMNum() 中将 128  修改成对应的系统
+  128 - 人员定位
+  770 - 安全监控
+  508 - 矿压系统
+2)WindowsServiceTest 
+  服务的名称修改成对应的系统
+  128 - ServiceTest
+  770 - ServiceTest770
+  508 - ServiceTest508
+
+http://www.cnblogs.com/sorex/archive/2012/05/16/2502001.html
+
+https://github.com/sorex/WindowsServiceTest/tree/master/WindowsServiceTest
+czltking
