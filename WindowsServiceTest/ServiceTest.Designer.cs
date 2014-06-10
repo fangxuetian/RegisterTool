@@ -1,4 +1,4 @@
-﻿namespace WindowsServiceTest
+﻿namespace WinServiceKey
 {
     partial class ServiceTest
     {

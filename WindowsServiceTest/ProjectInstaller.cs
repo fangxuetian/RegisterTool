@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
 
 
-namespace WindowsServiceTest
+namespace WinServiceKey
 {
     [RunInstaller(true)]
     public partial class ProjectInstaller : Installer

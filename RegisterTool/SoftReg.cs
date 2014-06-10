@@ -51,6 +51,21 @@ namespace RegisterTool
 			string strMNum = strNum.Substring(0, 24);//从生成的字符串中取出前24个字符做为机器码
 			return strMNum;
 		}
+
+		/// <summary>
+		/// 生成机器码(组合)
+		/// </summary>
+		/// <param name="firstStr">前缀</param>
+		/// <param name="lastRegDate">上次注册时间</param>
+		/// <returns></returns>
+		public string GetMNum(string firstStr, DateTime lastRegDate)
+		{
+			string date = lastRegDate.ToString("yyyyMMddHHmmss");//14位拼接字符串
+			string strNum = firstStr + date + GetCpu();//根据前缀、上次注册日、7位CPU序列生成唯一序列号
+			string strMNum = strNum.Substring(0, 24);//从生成的字符串中取出前24个字符做为机器码
+			return strMNum;
+		}
+
 		public int[] intCode = new int[127];//存储密钥
 		public int[] intNumber = new int[25];//存机器码的Ascii值
 		public char[] Charcode = new char[25];//存储机器码字

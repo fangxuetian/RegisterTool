@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterTool", "RegisterTool\RegisterTool.csproj", "{5ACC1CC2-9BC9-445E-95F8-B5D89E928788}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsServiceTest", "WindowsServiceTest\WindowsServiceTest.csproj", "{F75A9266-DA4D-40EE-B2AF-69129483E355}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinServiceKey", "WindowsServiceTest\WinServiceKey.csproj", "{F75A9266-DA4D-40EE-B2AF-69129483E355}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinTest", "WinTest\WinTest.csproj", "{7B1E7379-6B1D-4BA8-A68E-4FF34287F3DD}"
 EndProject

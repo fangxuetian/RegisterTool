@@ -1,4 +1,4 @@
-﻿namespace WindowsServiceTest
+﻿namespace WinServiceKey
 {
     partial class ProjectInstaller
     {
@@ -28,30 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
-            // 
-            // serviceProcessInstaller1
-            // 
-            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
-            this.serviceProcessInstaller1.Password = null;
-            this.serviceProcessInstaller1.Username = null;
-            // 
-            // serviceInstaller1
-            // 
-            this.serviceInstaller1.ServiceName = "ServiceTest";
-            // 
-            // ProjectInstaller
-            // 
-            this.Installers.AddRange(new System.Configuration.Install.Installer[] {
+			this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
+			this.WinServerKey = new System.ServiceProcess.ServiceInstaller();
+			// 
+			// serviceProcessInstaller1
+			// 
+			this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
+			this.serviceProcessInstaller1.Password = null;
+			this.serviceProcessInstaller1.Username = null;
+			// 
+			// WinServerKey
+			// 
+			this.WinServerKey.ServiceName = "ServiceKey";
+			this.WinServerKey.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+			// 
+			// ProjectInstaller
+			// 
+			this.Installers.AddRange(new System.Configuration.Install.Installer[] {
             this.serviceProcessInstaller1,
-            this.serviceInstaller1});
+            this.WinServerKey});
 
         }
 
         #endregion
 
         private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
-        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
+        private System.ServiceProcess.ServiceInstaller WinServerKey;
     }
 }
