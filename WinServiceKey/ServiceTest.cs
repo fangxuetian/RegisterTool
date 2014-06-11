@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.ServiceProcess;
-using System.Text;
-using System.IO;
 using Cjwdev.WindowsApi;
 using System.Runtime.InteropServices;
 
@@ -17,13 +12,13 @@ namespace WinServiceKey
 		System.Timers.Timer chkTime = null;
 		string appStartPath = "C://WINDOWS//Key//RegisterTool.exe";
 		#endregion
-		
+
 		#region 构造函数
 		public ServiceTest()
 		{
 			InitializeComponent();
 			chkTime = new System.Timers.Timer();
-			chkTime.Interval = 10000;
+			chkTime.Interval = 5000;
 			chkTime.Elapsed += new System.Timers.ElapsedEventHandler(chkTime_Elapsed);
 		}
 		#endregion
@@ -33,81 +28,16 @@ namespace WinServiceKey
 		{
 			try
 			{
-				bool isTrue = false;
-				//1.判断时间文件是否存在
-				if (File.Exists("C:\\WINDOWS\\Winlog.txt"))
+				Process[] localByName = Process.GetProcessesByName("RegisterTool");
+				if (localByName.Length < 1)
 				{
-					//存在提取时间
-					string strDateTime = File.ReadAllText("C:\\WINDOWS\\Winlog.txt", Encoding.ASCII);
-					if (strDateTime.Trim().Equals(""))
-					{
-						if (File.Exists("C:\\WINDOWS\\Winlog.txt"))
-						{ File.Delete("C:\\WINDOWS\\Winlog.txt"); }
-						strDateTime = DateTime.Now.AddDays(-16).ToString("yyyy-MM-dd HH:mm:ss ");
-						using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\WINDOWS\\Winlog.txt", true))
-						{
-							sw.WriteLine(strDateTime);
-						}
-					}
-					DateTime dt = DateTime.Now;
-					try
-					{
-						dt = Convert.ToDateTime(strDateTime);
-					}
-					catch
-					{
-						if (File.Exists("C:\\WINDOWS\\Winlog.txt"))
-						{ File.Delete("C:\\WINDOWS\\Winlog.txt"); }
-						strDateTime = DateTime.Now.AddDays(-16).ToString("yyyy-MM-dd HH:mm:ss ");
-						using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\WINDOWS\\Winlog.txt", true))
-						{
-							sw.WriteLine(strDateTime);
-						}
-
-					}
-					if (DateTime.Now < dt)
-					{
-						isTrue = true;
-					}
-					else if (DateTime.Now.AddDays(-15) > dt)
-					{
-						isTrue = true;
-					}
-
-					if (isTrue == true)
-					{
-						////弹出提示窗                   
-						//Process configFile = new Process();
-						//configFile.StartInfo.FileName = @"C:\WINDOWS\Key\FormSoftReg.exe";
-						//configFile.Start();
-
-						Process[] localByName = Process.GetProcessesByName("FormSoftReg.exe");
-						if (localByName.Length == 0)
-						{
-							// Process.Start("C://WINDOWS//Key//FormSoftReg.exe");
-							StartF();
-						}
-					}
+					StartF();
 				}
-				else
-				{
-					//不存在 写进来
-					using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\WINDOWS\\Winlog.txt", true))
-					{
-						sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "));
-					}
-				}
-				//2.判断时间是否合理
-
-				////不存在 写进来
-				//using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\log1.txt", true))
-				//{
-				//    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ") + "Start.");
-				//}
+				
 			}
 			catch (Exception ex)
 			{
-				using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\ErrorLog.txt", true))
+				using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:\\ErrorLog.txt", true))
 				{
 					sw.WriteLine(ex.Message.ToString() + "\r\n");
 				}

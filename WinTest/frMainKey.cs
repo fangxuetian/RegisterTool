@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.IO;
+using System.Threading;
 
 namespace WinTest
 {
@@ -23,33 +24,30 @@ namespace WinTest
 		{
 			string CurrentDirectory = System.Environment.CurrentDirectory;
 
-			if (!File.Exists("C:\\WINDOWS\\Winlog.txt"))
-			{
-				using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\WINDOWS\\Winlog.txt", true))
-				{
-					sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "));
-				}
-			}
+			//if (!File.Exists("C:\\WINDOWS\\Winlog.txt"))
+			//{
+			//    using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\WINDOWS\\Winlog.txt", true))
+			//    {
+			//        sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "));
+			//    }
+			//}
 
 			string targetPath = "C:\\WINDOWS\\Key\\";
 			if (!Directory.Exists(targetPath))
 			{
 				Directory.CreateDirectory(targetPath);//路径不存在则创建路径(首次安装)
 			}
-			else
+			//拷贝注册程序文件
+			string[] files = System.IO.Directory.GetFiles(CurrentDirectory + "\\Key");
+			string fileName = string.Empty;
+			string destFile = string.Empty;
+			foreach (string s in files)
 			{
-				//拷贝注册程序文件
-				string[] files = System.IO.Directory.GetFiles(CurrentDirectory + "\\Key");
-				string fileName = string.Empty;
-				string destFile = string.Empty;
-				foreach (string s in files)
+				fileName = System.IO.Path.GetFileName(s);
+				destFile = System.IO.Path.Combine(targetPath, fileName);
+				if (!File.Exists(destFile))//不存在则拷贝过去
 				{
-					fileName = System.IO.Path.GetFileName(s);
-					destFile = System.IO.Path.Combine(targetPath, fileName);
-					if (!File.Exists(destFile))//不存在则拷贝过去
-					{
-						System.IO.File.Copy(s, destFile, true);
-					}
+					System.IO.File.Copy(s, destFile, true);
 				}
 			}
 
@@ -58,20 +56,18 @@ namespace WinTest
 			{
 				Directory.CreateDirectory(targetPath);//路径不存在则创建路径(首次安装)
 			}
-			else
+
+			//拷贝服务程序文件
+			files = System.IO.Directory.GetFiles(CurrentDirectory + "\\Service");
+			fileName = string.Empty;
+			destFile = string.Empty;
+			foreach (string s in files)
 			{
-				//拷贝服务程序文件
-				string[] files = System.IO.Directory.GetFiles(CurrentDirectory + "\\Service");
-				string fileName = string.Empty;
-				string destFile = string.Empty;
-				foreach (string s in files)
+				fileName = System.IO.Path.GetFileName(s);
+				destFile = System.IO.Path.Combine(targetPath, fileName);
+				if (!File.Exists(destFile))//不存在则拷贝过去
 				{
-					fileName = System.IO.Path.GetFileName(s);
-					destFile = System.IO.Path.Combine(targetPath, fileName);
-					if (!File.Exists(destFile))//不存在则拷贝过去
-					{
-						System.IO.File.Copy(s, destFile, true);
-					}
+					System.IO.File.Copy(s, destFile, true);
 				}
 			}
 
@@ -123,9 +119,9 @@ namespace WinTest
 
 		private void btnInstall_Click(object sender, EventArgs e)
 		{
-			if (IsServiceExisted("ServiceTest") == true)
+			if (IsServiceExisted("ServiceKey") == true)
 			{
-				using (System.ServiceProcess.ServiceController control = new System.ServiceProcess.ServiceController("ServiceTest"))
+				using (System.ServiceProcess.ServiceController control = new System.ServiceProcess.ServiceController("ServiceKey"))
 				{
 					if (control.Status == System.ServiceProcess.ServiceControllerStatus.Running)
 					{
@@ -145,13 +141,56 @@ namespace WinTest
 			process.Start();
 			lblLog.Text = "卸载完成!";
 			System.Environment.CurrentDirectory = CurrentDirectory;
-			// CloseProcess();
 
-
-
+			CloseProcess();
+			Thread.Sleep(3000);
+			string path = @"C:\Windows\Key";
+			try
+			{
+				if (Directory.Exists(path))
+				{
+					string[] files = System.IO.Directory.GetFiles(path);
+					foreach (string s in files)
+					{
+						if (File.Exists(s))
+						{
+							File.Delete(s);
+						}
+					}
+				}
+				path = @"C:\Windows\Service";
+				if (Directory.Exists(path))
+				{
+					//拷贝服务程序文件
+					string[] files = System.IO.Directory.GetFiles(path);
+					foreach (string s in files)
+					{
+						if (File.Exists(s))
+						{
+							File.Delete(s);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
 		}
 
-
-
+		private void CloseProcess()
+		{
+			foreach (Process process in Process.GetProcesses())
+			{
+				if (process.ProcessName.Equals("RegisterTool"))
+				{
+					try
+					{
+						process.Kill();
+					}
+					catch { }
+				}
+			}
+		}
 	}
 }

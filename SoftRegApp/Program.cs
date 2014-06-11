@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace RegisterTool
+namespace SoftRegApp
 {
 	static class Program
 	{
@@ -14,7 +14,7 @@ namespace RegisterTool
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new FormSoftReg());
+			Application.Run(new FormMain());
 		}
 	}
 }
