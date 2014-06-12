@@ -155,7 +155,7 @@ namespace RegisterTool
 		}
 		#endregion
 
-		#region 业务
+		#region 业务	
 		/// <summary>
 		/// 定时检查是否已注册
 		/// </summary>
@@ -168,13 +168,12 @@ namespace RegisterTool
 
 		private void FormSoftReg_Load(object sender, EventArgs e)
 		{
-			System.IO.File.AppendAllText("D:\\Error.txt", RegisterNum + "\n\r", Encoding.Default);
 			tbDiskNumber.Text = SerialNum;
 			DealRegister();
 		}
 
 		/// <summary>
-		/// 处理注册逻辑
+		/// 处理是否注册逻辑
 		/// </summary>
 		public void DealRegister()
 		{
@@ -184,7 +183,7 @@ namespace RegisterTool
 			}
 			else
 			{
-				System.Diagnostics.Process[] localByName = System.Diagnostics.Process.GetProcessesByName("KJ128NMainRun");
+				//System.Diagnostics.Process[] localByName = System.Diagnostics.Process.GetProcessesByName("KJ128NMainRun");
 				if (CheckMainRunWindowIsActive())
 				{
 					this.Invoke(new MethodInvoker(() =>

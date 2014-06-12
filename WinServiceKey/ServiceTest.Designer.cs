@@ -1,6 +1,6 @@
 ﻿namespace WinServiceKey
 {
-    partial class ServiceTest
+    partial class ServiceKey
     {
         /// <summary> 
         /// 必需的设计器变量。
@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "ServiceTest";
+			// 
+			// ServiceKey
+			// 
+			this.ServiceName = "ServiceKey";
+
         }
 
         #endregion

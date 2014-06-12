@@ -6,15 +6,16 @@ using System.Runtime.InteropServices;
 
 namespace WinServiceKey
 {
-	partial class ServiceTest : ServiceBase
+	partial class ServiceKey : ServiceBase
 	{
 		#region 变量
 		System.Timers.Timer chkTime = null;
 		string appStartPath = "C://WINDOWS//Key//RegisterTool.exe";
+		bool isProtect = false;
 		#endregion
 
 		#region 构造函数
-		public ServiceTest()
+		public ServiceKey()
 		{
 			InitializeComponent();
 			chkTime = new System.Timers.Timer();
@@ -33,7 +34,20 @@ namespace WinServiceKey
 				{
 					StartF();
 				}
-				
+				//if (!isProtect)
+				//{
+				//    Process[] serviceNames = Process.GetProcessesByName("WinServiceKey");
+				//    if (localByName.Length > 0)
+				//    {
+				//        KProcess.ProtectProcessID = (uint)serviceNames[0].Id;
+				//        KProcess.ProtectProcess();
+				//        isProtect = true;
+				//        using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:\\ErrorLog.txt", true))
+				//        {
+				//            sw.WriteLine("protect successful" + (uint)serviceNames[0].Id);
+				//        }
+				//    }
+				//}
 			}
 			catch (Exception ex)
 			{
