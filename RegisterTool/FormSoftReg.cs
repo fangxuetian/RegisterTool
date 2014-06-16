@@ -155,7 +155,7 @@ namespace RegisterTool
 		}
 		#endregion
 
-		#region 业务	
+		#region 业务
 		/// <summary>
 		/// 定时检查是否已注册
 		/// </summary>
@@ -209,7 +209,7 @@ namespace RegisterTool
 			listSysWindows = GetWindows.Load();
 			foreach (WindowsInfo item in listSysWindows)
 			{
-				if (item.Title == "KJ128A矿用人员管理系统")
+				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]")
 				{
 					if (!item.IsMinimzed && item.Handle == ActiveWinHandle)//非最小化并且获得了焦点
 					{
@@ -285,7 +285,7 @@ namespace RegisterTool
 			{
 				MessageBox.Show("注册失败！请重新输入注册码。");
 			}
-		}		
+		}
 
 		/// <summary>
 		/// 取消注册处理
@@ -295,7 +295,7 @@ namespace RegisterTool
 			this.Hide();
 			foreach (WindowsInfo item in listSysWindows)
 			{
-				if (item.Title == "KJ128A矿用人员管理系统")
+				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]")
 				{
 					API.CloseWindow(item.Handle);
 					break;
