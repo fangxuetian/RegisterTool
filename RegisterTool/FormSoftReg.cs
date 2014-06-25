@@ -214,7 +214,7 @@ namespace RegisterTool
 			listSysWindows = GetWindows.Load();
 			foreach (WindowsInfo item in listSysWindows)
 			{
-				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]")
+				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]" || item.Title == "KJ128A型矿用人员管理系统--[客户端]")
 				{
 					if (!item.IsMinimzed && item.Handle == ActiveWinHandle)//非最小化并且获得了焦点
 					{
@@ -250,7 +250,6 @@ namespace RegisterTool
 				return false;
 			}
 		}
-
 
 		/// <summary>
 		/// 注册逻辑
@@ -301,7 +300,7 @@ namespace RegisterTool
 			this.Hide();
 			foreach (WindowsInfo item in listSysWindows)
 			{
-				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]")
+				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]" || item.Title == "KJ128A型矿用人员管理系统--[客户端]")
 				{
 					API.CloseWindow(item.Handle);
 					break;
