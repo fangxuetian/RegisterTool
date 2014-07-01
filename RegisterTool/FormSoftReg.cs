@@ -17,7 +17,6 @@ namespace RegisterTool
 		DateTime lastRegDate;
 		string serialNum;
 		string registerNumConfig;
-		int checkDays;
 		IList<RegisterTool.WindowsInfo> listSysWindows;
 		private IntPtr activeWinHandle;
 		private RECT winRect;
@@ -97,6 +96,28 @@ namespace RegisterTool
 		}
 
 		/// <summary>
+		/// 从配置文件获取注册期限天数
+		/// </summary>
+		public int CheckDays
+		{
+			get
+			{
+				return int.Parse(FileConfig.GetConfigValue("CheckDays"));
+			}
+		}
+
+		/// <summary>
+		/// 从配置文件获取注册期限天数
+		/// </summary>
+		public int PreAlertDays
+		{
+			get
+			{
+				return int.Parse(FileConfig.GetConfigValue("PreAlertDays"));
+			}
+		}
+
+		/// <summary>
 		/// 当前获得焦点的窗口
 		/// </summary>
 		public IntPtr ActiveWinHandle
@@ -144,6 +165,28 @@ namespace RegisterTool
 				return WinRect.Bottom - WinRect.Top;
 			}
 		}
+
+		/// <summary>
+		/// 根据最后一次注册日期和注册限制天数判断当前应该采取的操作
+		/// </summary>
+		public OperateType _OperateType
+		{
+			get
+			{
+				if (DateTime.Now.AddDays(PreAlertDays - CheckDays) >= lastRegDate && DateTime.Now.AddDays(-CheckDays) <= lastRegDate)//警告
+				{
+					return OperateType.Alert;
+				}
+				else if (DateTime.Now.AddDays(-CheckDays) > lastRegDate)
+				{
+					return OperateType.ShutDown;
+				}
+				else
+				{
+					return OperateType.Normal;
+				}
+			}
+		}
 		#endregion
 
 		#region 构造函数
@@ -154,7 +197,6 @@ namespace RegisterTool
 			timerCheck.Interval = 5000;
 			timerCheck.Elapsed += new System.Timers.ElapsedEventHandler(timerCheck_Elapsed);
 			timerCheck.Start();
-			checkDays = Convert.ToInt32(FileConfig.GetConfigValue("CheckDays"));
 			registerNum = RegisterNum;
 			lastRegDate = LastRegDate;
 		}
@@ -169,12 +211,27 @@ namespace RegisterTool
 		void timerCheck_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
 			DealRegister();
+			GetLeftDays();
+		}
+
+		/// <summary>
+		/// 获取剩余天数
+		/// </summary>
+		private void GetLeftDays()
+		{
+			TimeSpan ts = DateTime.Now - lastRegDate;
+			int leftDays = CheckDays - ts.Days;
+			this.Invoke(new MethodInvoker(() =>
+			{
+				lblLeftDay.Text = (leftDays > 0 ? leftDays : 0).ToString();
+			}));
 		}
 
 		private void FormSoftReg_Load(object sender, EventArgs e)
 		{
 			tbDiskNumber.Text = SerialNum;
 			DealRegister();
+			GetLeftDays();
 		}
 
 		/// <summary>
@@ -189,14 +246,16 @@ namespace RegisterTool
 			else
 			{
 				//System.Diagnostics.Process[] localByName = System.Diagnostics.Process.GetProcessesByName("KJ128NMainRun");
-				if (CheckMainRunWindowIsActive())
+				Process process128 = Get128Process("KJ128NMainRun");
+				if (process128 != null)
 				{
+					if (_OperateType == OperateType.ShutDown)
+					{
+						process128.Kill();
+					}
+
 					this.Invoke(new MethodInvoker(() =>
 					{
-						this.Top = WinRect.Top;
-						this.Left = WinRect.Left;
-						this.Width = WinWidth;
-						this.Height = WinHeight;
 						this.WindowState = FormWindowState.Normal;
 						this.Show();
 					}));
@@ -228,6 +287,25 @@ namespace RegisterTool
 		}
 
 		/// <summary>
+		/// 获取128进程
+		/// </summary>
+		/// <returns></returns>
+		private Process Get128Process(string procName)
+		{
+			Process processTarget = null;
+			foreach (Process process in Process.GetProcesses())
+			{
+				if (process.ProcessName.Equals(procName))
+				{
+					processTarget = process;
+					break;
+				}
+			}
+
+			return processTarget;
+		}
+
+		/// <summary>
 		/// 检测是否已经注册
 		/// </summary>
 		/// <returns></returns>
@@ -235,7 +313,7 @@ namespace RegisterTool
 		{
 			try
 			{
-				if (DateTime.Now.AddDays(-checkDays) <= lastRegDate && registerNum.Equals(registerNumConfig))//已注册
+				if (DateTime.Now.AddDays(-(CheckDays - PreAlertDays)) <= lastRegDate && registerNum.Equals(registerNumConfig))//已注册
 				{
 					return true;
 				}
@@ -298,12 +376,12 @@ namespace RegisterTool
 		private void DealCancelReg()
 		{
 			this.Hide();
-			foreach (WindowsInfo item in listSysWindows)
+			if (_OperateType == OperateType.ShutDown)
 			{
-				if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]" || item.Title == "KJ128A型矿用人员管理系统--[客户端]")
+				Process process128 = Get128Process("KJ128NMainRun");
+				if (process128 != null)
 				{
-					API.CloseWindow(item.Handle);
-					break;
+					process128.Kill();
 				}
 			}
 		}
@@ -317,6 +395,14 @@ namespace RegisterTool
 		{
 			DealCancelReg();
 		}
+
 		#endregion
+	}
+
+	public enum OperateType
+	{
+		Normal,	//正常
+		Alert,	//警告
+		ShutDown//强制关闭
 	}
 }
