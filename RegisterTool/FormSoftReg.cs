@@ -21,8 +21,7 @@ namespace RegisterTool
 		IList<RegisterTool.WindowsInfo> listSysWindows;
 		private IntPtr activeWinHandle;
 		private RECT winRect;
-		private int winWidth;
-		private int winHeight;
+		public string registerNum;
 		#endregion
 
 		#region 属性
@@ -74,6 +73,10 @@ namespace RegisterTool
 			get
 			{
 				return softReg.GetRNum(SerialNum);
+			}
+			set
+			{
+				registerNum = value;
 			}
 		}
 
@@ -152,6 +155,8 @@ namespace RegisterTool
 			timerCheck.Elapsed += new System.Timers.ElapsedEventHandler(timerCheck_Elapsed);
 			timerCheck.Start();
 			checkDays = Convert.ToInt32(FileConfig.GetConfigValue("CheckDays"));
+			registerNum = RegisterNum;
+			lastRegDate = LastRegDate;
 		}
 		#endregion
 
@@ -230,7 +235,7 @@ namespace RegisterTool
 		{
 			try
 			{
-				if (DateTime.Now.AddDays(-checkDays) <= LastRegDate && RegisterNum.Equals(RegisterNumConfig))//已注册
+				if (DateTime.Now.AddDays(-checkDays) <= lastRegDate && registerNum.Equals(registerNumConfig))//已注册
 				{
 					return true;
 				}
@@ -271,6 +276,7 @@ namespace RegisterTool
 			{
 				LastRegDate = DateTime.Now;
 				RegisterNumConfig = RegisterNum;
+				registerNum = RegisterNumConfig;
 				MessageBox.Show("注册成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				this.Hide();
 				tbDiskNumber.Text = SerialNum;
