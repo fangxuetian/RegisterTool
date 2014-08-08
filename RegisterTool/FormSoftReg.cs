@@ -194,7 +194,7 @@ namespace RegisterTool
 		{
 			InitializeComponent();
 			timerCheck = new System.Timers.Timer();
-			timerCheck.Interval = 5000;
+			timerCheck.Interval = 10000;
 			timerCheck.Elapsed += new System.Timers.ElapsedEventHandler(timerCheck_Elapsed);
 			timerCheck.Start();
 			registerNum = RegisterNum;
@@ -239,11 +239,11 @@ namespace RegisterTool
 		/// </summary>
 		public void DealRegister()
 		{
-			if (CheckRegister())
+			if (CheckRegister())//已注册
 			{
 				this.Hide();
 			}
-			else
+			else//未注册
 			{
 				//System.Diagnostics.Process[] localByName = System.Diagnostics.Process.GetProcessesByName("KJ128NMainRun");
 				Process process128 = Get128Process("KJ128NMainRun");
@@ -253,12 +253,24 @@ namespace RegisterTool
 					{
 						process128.Kill();
 					}
-
-					this.Invoke(new MethodInvoker(() =>
+					else
 					{
-						this.WindowState = FormWindowState.Normal;
-						this.Show();
-					}));
+						this.Invoke(new MethodInvoker(() =>
+						{
+							if (CheckMainRunWindowIsActive())
+							{
+								this.Invoke(new MethodInvoker(() =>
+								{
+									this.Top = WinRect.Top;
+									this.Left = WinRect.Left;
+									this.Width = WinWidth;
+									this.Height = WinHeight;
+									this.WindowState = FormWindowState.Normal;
+									this.Show();
+								}));
+							}
+						}));
+					}
 				}
 			}
 		}
@@ -313,7 +325,7 @@ namespace RegisterTool
 		{
 			try
 			{
-				if (DateTime.Now.AddDays(-(CheckDays - PreAlertDays)) <= lastRegDate && registerNum.Equals(registerNumConfig))//已注册
+				if (DateTime.Now.AddDays(-(CheckDays - PreAlertDays)) <= lastRegDate && registerNum.Equals(RegisterNumConfig))//已注册
 				{
 					return true;
 				}
@@ -376,14 +388,15 @@ namespace RegisterTool
 		private void DealCancelReg()
 		{
 			this.Hide();
-			if (_OperateType == OperateType.ShutDown)
-			{
-				Process process128 = Get128Process("KJ128NMainRun");
-				if (process128 != null)
-				{
-					process128.Kill();
-				}
-			}
+
+			//foreach (WindowsInfo item in listSysWindows)
+			//{
+			//    if (item.Title == "KJ128A矿用人员管理系统" || item.Title == "KJ128A型矿用人员管理系统--[主机]" || item.Title == "KJ128A型矿用人员管理系统--[备机]" || item.Title == "KJ128A型矿用人员管理系统--[客户端]")
+			//    {
+			//        API.CloseWindow(item.Handle);
+			//        break;
+			//    }
+			//}
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)

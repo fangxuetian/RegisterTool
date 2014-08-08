@@ -49,8 +49,8 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.panel1 = new System.Windows.Forms.Panel();
 			this.lblLeftDay = new System.Windows.Forms.Label();
+			this.panel1 = new System.Windows.Forms.Panel();
 			this.label10 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.groupBox1.SuspendLayout();
@@ -272,14 +272,6 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "提示";
 			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-			this.panel1.Location = new System.Drawing.Point(375, 167);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(200, 2);
-			this.panel1.TabIndex = 20;
-			// 
 			// lblLeftDay
 			// 
 			this.lblLeftDay.Font = new System.Drawing.Font("宋体", 55F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -290,6 +282,14 @@
 			this.lblLeftDay.TabIndex = 19;
 			this.lblLeftDay.Text = "10";
 			this.lblLeftDay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// panel1
+			// 
+			this.panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+			this.panel1.Location = new System.Drawing.Point(375, 167);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(200, 2);
+			this.panel1.TabIndex = 20;
 			// 
 			// label10
 			// 
